@@ -13,7 +13,7 @@ subreddit = "gonewild"
 #subreddit = "sweden"
 
 #lim = 2
-lim = 25
+lim = 100
 
 length = 64800.0	#12 hours so 60*60*12
 sleepyLength = 600.0 # 10 mins so 600 
@@ -30,7 +30,7 @@ def write_twice(s):
 	sys.stdout.flush()
 
 def get_submissions():
-	r = praw.Reddit(user_agent="test_application")
+	r = praw.Reddit(user_agent="gonewild title scraper by /u/eickmet")
 	subs = r.get_subreddit(subreddit).get_new(limit=lim)
 	with open(fileName,"a+") as f:
 		f.write("Begin:\n")
@@ -73,4 +73,5 @@ Should be able, in praw, to get_hot or get_top with some date element so like:
 will default to like noon or something then add number of seconds in a day
 Maybe I can't do that.
 There is the idea of a place holder that could be used to get even older data or something
+Could just get the new every hour or something.
 """

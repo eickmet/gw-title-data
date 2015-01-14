@@ -1,4 +1,5 @@
 import operator
+import csv
 
 filename = "finalTitles.txt"
 
@@ -150,10 +151,10 @@ def get_details(word):
 	return f,m,b
 
 
-def print_top_ten(x_dic):
+def print_top(x_dic,more):
 	top_ten = [] #0 pos being most common word 10 being less common
 	sorted_x = sorted(x_dic.items(), key=operator.itemgetter(0)) #Sorts by alphabetical order
-	sorted_x = sorted(sorted_x, key=operator.itemgetter(1),reverse=True)[:10] #Sorts by word_count
+	sorted_x = sorted(sorted_x, key=operator.itemgetter(1),reverse=True)[:more] #Sorts by word_count
 	len_x_list = []
 	for i in sorted_x:
 		len_x_list.append(len(i[0]))
@@ -163,27 +164,47 @@ def print_top_ten(x_dic):
 	count = 0
 	numb = 1
 	for_ties = 0
-	for_header = " {} | {:^"+str(maxlen)+"s} | {"+":^3"+"} | {"+":^5"+"} | {"+":^5"+"} | {"+":^5"+"} |"	#Word Centered
-	for_data   = "{:2} | {:"+str(maxlen)+"s} | {"+":^3"+"} | {"+":^5"+"} | {"+":^5"+"} | {"+":^5"+"} |"	#Word Left Aligned
-	header = for_header.format("#","Word","Cnt","F Cnt","M Cnt","B Cnt")
+	for_header = " {} | {:^"+str(maxlen)+"s} | {"+":^3"+"} |"	#Word Centered
+	for_data   = "{:2} | {:"+str(maxlen)+"s} | {"+":^3"+"} |"	#Word Left Aligned
+	header = for_header.format("#","Word","Cnt")
 	print header
-	#print "_"*len(header)
 	for x in sorted_x:
 		numb += 1
 		if x[1] != for_ties:
 			count += 1
-		f,m,b = get_details(x[0])
-		line = for_data.format(count,x[0],x[1],f,m,b)	# need to get the numbers for 
-		#line = "{:>2}. {}".format(count,x[0])
+		line = for_data.format(count,x[0],x[1])	# need to get the numbers for 
 		for_ties = x[1]
 		print line
 
+def write_csv_file():
+	with open("word_stats.csv",'w+') as cfile:
+		fieldnames = ['word','word_frequency']
+		writer = csv.DictWriter(cfile,fieldnames=fieldnames)
+		writer.writeheader()
+		for i in all_word_dict:
+			writer.writerow({'word':i,'word_frequency':all_word_dict[i]})
 
-open_titties_file()
-#print_dict()
-print_top_ten(all_word_dict)
+def read_csv_file():
+	"""
+	Reads in the old title stats in order to maintain a rolling stat
+	"""
+	with open("word_stats.csv","w+") as cfile:
+		reader = csv.DictReader(cfile)
+		for row in reader:
+			all_word_dict[row['word']] = int(row['word_frequency'])
 
 
+def main():
+	read_csv_file()
+
+	open_titties_file()
+
+	write_csv_file()
+
+	print_top(all_word_dict,100)
+
+
+main()
 
 
 

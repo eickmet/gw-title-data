@@ -7,9 +7,12 @@ from shutil import move
 from os import remove, close, stat
 import sys
 
-fn = "cptitles2.txt"
-fnwrite = "finalTitles.txt"
+fn = "cptitle3.txt"
+fnwrite = "finalTitles2.txt"
 
+
+#Taken from Stackoverflow was an answer to a question.
+#Should probably give credit
 def replace(file_path, pattern, subst):
 	fh, abs_path = mkstemp()
 	new_file = open(abs_path,'w')
